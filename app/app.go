@@ -25,15 +25,15 @@ import (
 	"github.com/danikarik/phraseservice/x/phraseservice"
 	phraseservicekeeper "github.com/danikarik/phraseservice/x/phraseservice/keeper"
 	phraseservicetypes "github.com/danikarik/phraseservice/x/phraseservice/types"
-  // this line is used by starport scaffolding # 1
+	// this line is used by starport scaffolding # 1
 )
 
-const appName = "phraseservice"
+const name = "phraseservice"
 
 var (
-	DefaultCLIHome = os.ExpandEnv("$HOME/.phraseservicecli")
+	DefaultCLIHome  = os.ExpandEnv("$HOME/.phraseservicecli")
 	DefaultNodeHome = os.ExpandEnv("$HOME/.phraseserviced")
-	ModuleBasics = module.NewBasicManager(
+	ModuleBasics    = module.NewBasicManager(
 		genutil.AppModuleBasic{},
 		auth.AppModuleBasic{},
 		bank.AppModuleBasic{},
@@ -41,7 +41,7 @@ var (
 		params.AppModuleBasic{},
 		supply.AppModuleBasic{},
 		phraseservice.AppModuleBasic{},
-    // this line is used by starport scaffolding # 2
+		// this line is used by starport scaffolding # 2
 	)
 
 	maccPerms = map[string][]string{
@@ -61,7 +61,7 @@ func MakeCodec() *codec.Codec {
 	return cdc.Seal()
 }
 
-type NewApp struct {
+type PhraseServiceApp struct {
 	*bam.BaseApp
 	cdc *codec.Codec
 
@@ -72,43 +72,43 @@ type NewApp struct {
 
 	subspaces map[string]params.Subspace
 
-	accountKeeper  auth.AccountKeeper
-	bankKeeper     bank.Keeper
-	stakingKeeper  staking.Keeper
-	supplyKeeper   supply.Keeper
-	paramsKeeper   params.Keeper
+	accountKeeper       auth.AccountKeeper
+	bankKeeper          bank.Keeper
+	stakingKeeper       staking.Keeper
+	supplyKeeper        supply.Keeper
+	paramsKeeper        params.Keeper
 	phraseserviceKeeper phraseservicekeeper.Keeper
-  // this line is used by starport scaffolding # 3
+	// this line is used by starport scaffolding # 3
 	mm *module.Manager
 
 	sm *module.SimulationManager
 }
 
-var _ simapp.App = (*NewApp)(nil)
+var _ simapp.App = (*PhraseServiceApp)(nil)
 
-func NewInitApp(
+func InitPhraseService(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool,
 	invCheckPeriod uint, baseAppOptions ...func(*bam.BaseApp),
-) *NewApp {
+) *PhraseServiceApp {
 	cdc := MakeCodec()
 
-	bApp := bam.NewBaseApp(appName, logger, db, auth.DefaultTxDecoder(cdc), baseAppOptions...)
+	bApp := bam.NewBaseApp(name, logger, db, auth.DefaultTxDecoder(cdc), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetAppVersion(version.Version)
 
 	keys := sdk.NewKVStoreKeys(
-    bam.MainStoreKey,
-    auth.StoreKey,
-    staking.StoreKey,
+		bam.MainStoreKey,
+		auth.StoreKey,
+		staking.StoreKey,
 		supply.StoreKey,
-    params.StoreKey,
-    phraseservicetypes.StoreKey,
-    // this line is used by starport scaffolding # 5
-  )
+		params.StoreKey,
+		phraseservicetypes.StoreKey,
+		// this line is used by starport scaffolding # 5
+	)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
-	var app = &NewApp{
+	var app = &PhraseServiceApp{
 		BaseApp:        bApp,
 		cdc:            cdc,
 		invCheckPeriod: invCheckPeriod,
@@ -160,7 +160,7 @@ func NewInitApp(
 		keys[phraseservicetypes.StoreKey],
 	)
 
-  // this line is used by starport scaffolding # 4
+	// this line is used by starport scaffolding # 4
 
 	app.mm = module.NewManager(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
@@ -169,7 +169,7 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		phraseservice.NewAppModule(app.phraseserviceKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
-    // this line is used by starport scaffolding # 6
+		// this line is used by starport scaffolding # 6
 	)
 
 	app.mm.SetOrderEndBlockers(staking.ModuleName)
@@ -181,7 +181,7 @@ func NewInitApp(
 		phraseservicetypes.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
-    // this line is used by starport scaffolding # 7
+		// this line is used by starport scaffolding # 7
 	)
 
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter())
@@ -217,7 +217,7 @@ func NewDefaultGenesisState() GenesisState {
 	return ModuleBasics.DefaultGenesis()
 }
 
-func (app *NewApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *PhraseServiceApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState simapp.GenesisState
 
 	app.cdc.MustUnmarshalJSON(req.AppStateBytes, &genesisState)
@@ -225,19 +225,19 @@ func (app *NewApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.
 	return app.mm.InitGenesis(ctx, genesisState)
 }
 
-func (app *NewApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *PhraseServiceApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
-func (app *NewApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *PhraseServiceApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
-func (app *NewApp) LoadHeight(height int64) error {
+func (app *PhraseServiceApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height, app.keys[bam.MainStoreKey])
 }
 
-func (app *NewApp) ModuleAccountAddrs() map[string]bool {
+func (app *PhraseServiceApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		modAccAddrs[supply.NewModuleAddress(acc).String()] = true
@@ -246,11 +246,11 @@ func (app *NewApp) ModuleAccountAddrs() map[string]bool {
 	return modAccAddrs
 }
 
-func (app *NewApp) Codec() *codec.Codec {
+func (app *PhraseServiceApp) Codec() *codec.Codec {
 	return app.cdc
 }
 
-func (app *NewApp) SimulationManager() *module.SimulationManager {
+func (app *PhraseServiceApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 

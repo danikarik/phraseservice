@@ -79,7 +79,7 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 	if err != nil {
 		panic(err)
 	}
-	return app.NewInitApp(
+	return app.InitPhraseService(
 		logger, db, traceStore, true, invCheckPeriod,
 		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(viper.GetString(server.FlagMinGasPrices)),
@@ -94,7 +94,7 @@ func exportAppStateAndTMValidators(
 ) (json.RawMessage, []tmtypes.GenesisValidator, error) {
 
 	if height != -1 {
-		aApp := app.NewInitApp(logger, db, traceStore, false, uint(1))
+		aApp := app.InitPhraseService(logger, db, traceStore, false, uint(1))
 		err := aApp.LoadHeight(height)
 		if err != nil {
 			return nil, nil, err
@@ -102,7 +102,7 @@ func exportAppStateAndTMValidators(
 		return aApp.ExportAppStateAndValidators(forZeroHeight, jailWhiteList)
 	}
 
-	aApp := app.NewInitApp(logger, db, traceStore, true, uint(1))
+	aApp := app.InitPhraseService(logger, db, traceStore, true, uint(1))
 
 	return aApp.ExportAppStateAndValidators(forZeroHeight, jailWhiteList)
 }

@@ -1,7 +1,6 @@
 all: build
 
-
 build:
 	@mkdir -p build/
-	@go build -mod=mod -o build/clayd ./cmd/clayd
-	@go build -mod=mod -o build/claycli ./cmd/claycli
+	@go build -o build/phraseserviced ./cmd/phraseserviced
+	@go build -o build/phraseservicecli ./cmd/phraseservicecli
