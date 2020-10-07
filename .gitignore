@@ -2,3 +2,8 @@ vue/node_modules
 vue/dist
 vue/.cache
 build
+
+# Local devevelopment
+.env
+.vscode/
+.DS_Store
