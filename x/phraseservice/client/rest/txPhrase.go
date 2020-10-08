@@ -12,7 +12,7 @@ import (
 
 type createPhraseRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Owner   string       `json:"owner"`
+	Owner   string       `json:"creator"`
 	Text    string       `json:"text"`
 	Block   int64        `json:"block"`
 }
@@ -48,7 +48,7 @@ func createPhraseHandler(ctx context.CLIContext) http.HandlerFunc {
 
 type setPhraseRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Owner   string       `json:"owner"`
+	Owner   string       `json:"creator"`
 	Text    string       `json:"text"`
 	Block   int64        `json:"block"`
 }
@@ -84,8 +84,8 @@ func setPhraseHandler(ctx context.CLIContext) http.HandlerFunc {
 
 type deletePhraseRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Owner   string       `json:"owner"`
-	Text    string       `json:"id"`
+	Owner   string       `json:"creator"`
+	Text    string       `json:"text"`
 }
 
 func deletePhraseHandler(ctx context.CLIContext) http.HandlerFunc {
