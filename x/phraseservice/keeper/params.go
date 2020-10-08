@@ -1,22 +1,54 @@
 package keeper
-/*
-// TODO: Define if your module needs Parameters, if not this can be deleted
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/danikarik/phraseservice/x/phraseservice/types"
 )
 
-// GetParams returns the total set of phraseservice parameters.
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramspace.GetParamSet(ctx, &params)
-	return params
+func (k Keeper) GetOwner(ctx sdk.Context, text string) sdk.AccAddress {
+	phrase, _ := k.GetPhrase(ctx, text)
+	return phrase.Owner
 }
 
-// SetParams sets the phraseservice parameters to the param space.
-func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-	k.paramspace.SetParamSet(ctx, &params)
+func (k Keeper) Exists(ctx sdk.Context, text string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has([]byte(types.PhrasePrefix + text))
 }
-*/
+
+func (k Keeper) SetName(ctx sdk.Context, text string, value string) {
+	phrase, _ := k.GetPhrase(ctx, text)
+	phrase.Text = value
+	k.SetPhrase(ctx, phrase)
+}
+
+func (k Keeper) HasOwner(ctx sdk.Context, text string) bool {
+	phrase, _ := k.GetPhrase(ctx, text)
+	return !phrase.Owner.Empty()
+}
+
+func (k Keeper) SetOwner(ctx sdk.Context, text string, owner sdk.AccAddress) {
+	phrase, _ := k.GetPhrase(ctx, text)
+	phrase.Owner = owner
+	k.SetPhrase(ctx, phrase)
+}
+
+func (k Keeper) GetBlock(ctx sdk.Context, text string) int64 {
+	phrase, _ := k.GetPhrase(ctx, text)
+	return phrase.Block
+}
+
+func (k Keeper) SetBlock(ctx sdk.Context, text string, block int64) {
+	phrase, _ := k.GetPhrase(ctx, text)
+	phrase.Block = block
+	k.SetPhrase(ctx, phrase)
+}
+
+func (k Keeper) IsPhrasePresent(ctx sdk.Context, text string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has([]byte(text))
+}
+
+func (k Keeper) GetPhrasesIterator(ctx sdk.Context) sdk.Iterator {
+	store := ctx.KVStore(k.storeKey)
+	return sdk.KVStorePrefixIterator(store, []byte(types.PhrasePrefix))
+}

@@ -5,5 +5,6 @@ import (
 )
 
 var (
-	ErrInvalid = sdkerrors.Register(ModuleName, 1, "custom error message")
+	ErrPhraseDoesNotExist = sdkerrors.Register(ModuleName, 1, "phrase does not exist")
+	ErrPhraseIsTaken      = sdkerrors.Register(ModuleName, 1, "phrase is taken")
 )

@@ -16,15 +16,12 @@ import (
 	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankcmd "github.com/cosmos/cosmos-sdk/x/bank/client/cli"
-
+	"github.com/danikarik/phraseservice/app"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
 	"github.com/tendermint/go-amino"
 	"github.com/tendermint/tendermint/libs/cli"
-
-	"github.com/danikarik/phraseservice/app"
-  // this line is used by starport scaffolding # 1
+	// this line is used by starport scaffolding # 1
 )
 
 func main() {
@@ -141,7 +138,7 @@ func registerRoutes(rs *lcd.RestServer) {
 	client.RegisterRoutes(rs.CliCtx, rs.Mux)
 	authrest.RegisterTxRoutes(rs.CliCtx, rs.Mux)
 	app.ModuleBasics.RegisterRESTRoutes(rs.CliCtx, rs.Mux)
-  // this line is used by starport scaffolding # 2
+	// this line is used by starport scaffolding # 2
 }
 
 func initConfig(cmd *cobra.Command) error {

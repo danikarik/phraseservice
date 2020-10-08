@@ -3,11 +3,6 @@ package phraseservice
 import (
 	"encoding/json"
 
-	"github.com/gorilla/mux"
-	"github.com/spf13/cobra"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,6 +12,9 @@ import (
 	"github.com/danikarik/phraseservice/x/phraseservice/client/rest"
 	"github.com/danikarik/phraseservice/x/phraseservice/keeper"
 	"github.com/danikarik/phraseservice/x/phraseservice/types"
+	"github.com/gorilla/mux"
+	"github.com/spf13/cobra"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 // Type check to ensure the interface is properly implemented

@@ -5,11 +5,6 @@ import (
 	"io"
 	"os"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmos "github.com/tendermint/tendermint/libs/os"
-	dbm "github.com/tendermint/tm-db"
-
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -25,10 +20,14 @@ import (
 	"github.com/danikarik/phraseservice/x/phraseservice"
 	phraseservicekeeper "github.com/danikarik/phraseservice/x/phraseservice/keeper"
 	phraseservicetypes "github.com/danikarik/phraseservice/x/phraseservice/types"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/log"
+	tmos "github.com/tendermint/tendermint/libs/os"
+	dbm "github.com/tendermint/tm-db"
 	// this line is used by starport scaffolding # 1
 )
 
-const name = "phraseservice"
+const appName = "phraseservice"
 
 var (
 	DefaultCLIHome  = os.ExpandEnv("$HOME/.phraseservicecli")
@@ -92,7 +91,7 @@ func InitPhraseService(
 ) *PhraseServiceApp {
 	cdc := MakeCodec()
 
-	bApp := bam.NewBaseApp(name, logger, db, auth.DefaultTxDecoder(cdc), baseAppOptions...)
+	bApp := bam.NewBaseApp(appName, logger, db, auth.DefaultTxDecoder(cdc), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetAppVersion(version.Version)
 
