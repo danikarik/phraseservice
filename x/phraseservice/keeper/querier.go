@@ -20,7 +20,7 @@ func NewQuerier(k Keeper) sdk.Querier {
 		switch path[0] {
 		// this line is used by starport scaffolding # 2
 		case types.QueryListPhrase:
-			return listPhraseByOwner(ctx, k)
+			return listPhraseByOwner(ctx, path, k)
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown phraseservice query endpoint")
 		}

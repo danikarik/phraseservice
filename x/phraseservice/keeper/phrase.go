@@ -47,7 +47,7 @@ func (k Keeper) DeletePhrase(ctx sdk.Context, text string) {
 // Functions used by querier
 //
 
-func listPhraseByOwner(ctx sdk.Context, k Keeper) ([]byte, error) {
+func listPhraseByOwner(ctx sdk.Context, path []string, k Keeper) ([]byte, error) {
 	var phrases []types.Phrase
 
 	store := ctx.KVStore(k.storeKey)
@@ -56,7 +56,15 @@ func listPhraseByOwner(ctx sdk.Context, k Keeper) ([]byte, error) {
 	for ; iterator.Valid(); iterator.Next() {
 		var phrase types.Phrase
 		k.cdc.MustUnmarshalBinaryLengthPrefixed(store.Get(iterator.Key()), &phrase)
-		phrases = append(phrases, phrase)
+
+		requester, err := sdk.AccAddressFromBech32(path[1])
+		if err != nil {
+			return nil, err
+		}
+
+		if phrase.Owner.Equals(requester) {
+			phrases = append(phrases, phrase)
+		}
 	}
 
 	res := codec.MustMarshalJSONIndent(k.cdc, phrases)
