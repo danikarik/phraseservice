@@ -84,7 +84,7 @@ func setPhraseHandler(ctx context.CLIContext) http.HandlerFunc {
 
 type deletePhraseRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Owner   string       `json:"creator"`
+	Owner   string       `json:"owner"`
 	Text    string       `json:"id"`
 }
 

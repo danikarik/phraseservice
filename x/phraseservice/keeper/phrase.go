@@ -63,7 +63,7 @@ func listPhraseByOwner(ctx sdk.Context, k Keeper) ([]byte, error) {
 	return res, nil
 }
 
-// GetPhraseOwner gets creator of the item.
+// GetPhraseOwner gets owner of the item.
 func (k Keeper) GetPhraseOwner(ctx sdk.Context, text string) sdk.AccAddress {
 	phrase, err := k.GetPhrase(ctx, text)
 	if err != nil {

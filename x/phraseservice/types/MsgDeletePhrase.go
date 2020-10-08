@@ -8,7 +8,7 @@ import (
 var _ sdk.Msg = &MsgDeletePhrase{}
 
 type MsgDeletePhrase struct {
-	Owner sdk.AccAddress `json:"creator" yaml:"creator"`
+	Owner sdk.AccAddress `json:"owner" yaml:"owner"`
 	Text  string         `json:"text" yaml:"text"`
 }
 
