@@ -17,10 +17,16 @@ prep:
 	@rm -rf build
 	@mkdir build
 
-build: go.sum
+build:
 	@echo "--> Building phraseserviced & phraseservicecli"
 	@go build $(BUILD_FLAGS) -o build/phraseserviced ./cmd/phraseserviced
 	@go build $(BUILD_FLAGS) -o build/phraseservicecli ./cmd/phraseservicecli
 
+build-linux:
+	@GOOS=linux GOARCH=amd64 $(MAKE) build
+
 test:
 	@go test $(PACKAGES)
+
+image:
+	@DOCKER_BUILDKIT=1 docker build -t phraseservice .
